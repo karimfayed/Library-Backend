@@ -1,0 +1,269 @@
+openapi: 3.0.0
+info:
+  title: Library API
+  version: 1.0.0
+  description: An API for managing a library
+paths:
+  /books:
+    post:
+      summary: Add a book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                author:
+                  type: string
+                isbn:
+                  type: string
+                availableQuantity:
+                  type: integer
+                shelfLocation:
+                  type: string
+      responses:
+        '201':
+          description: Created
+    get:
+      summary: List all books
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    author:
+                      type: string
+                    isbn:
+                      type: string
+                    availableQuantity:
+                      type: integer
+                    shelfLocation:
+                      type: string
+  '/books/{bookId}':
+    put:
+      summary: Update a book
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                author:
+                  type: string
+                isbn:
+                  type: string
+                availableQuantity:
+                  type: integer
+                shelfLocation:
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+    delete:
+      summary: Delete a book
+      parameters:
+        - name: bookId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  /books/search:
+    get:
+      summary: 'Search for a book by title, author, or ISBN'
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    author:
+                      type: string
+                    isbn:
+                      type: string
+  /borrowers:
+    post:
+      summary: Register a borrower
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                address:
+                  type: string
+                registeredDate:
+                  type: string
+                  format: date-time
+      responses:
+        '201':
+          description: Created
+    get:
+      summary: List all borrowers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    email:
+                      type: string
+                    registeredDate:
+                      type: string
+                      format: date-time
+  '/borrowers/{borrowerId}':
+    put:
+      summary: Update a borrower
+      parameters:
+        - name: borrowerId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                address:
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+    delete:
+      summary: Delete a borrower
+      parameters:
+        - name: borrowerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  '/borrowers/{borrowerId}/checkouts':
+    post:
+      summary: Check out a book
+      parameters:
+        - name: borrowerId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: bookId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Created
+        '404':
+          description: Not Found
+  '/borrowers/{borrowerId}/returns':
+    post:
+      summary: Return a book
+      parameters:
+        - name: borrowerId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: bookId
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+  '/borrowers/{borrowerId}/checkouts-list':
+    get:
+      summary: List books checked out by a borrower
+      parameters:
+        - name: borrowerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    author:
+                      type: string
+                    isbn:
+                      type: string
+                    dueDate:
+                      type: string
+                      format: date-time
+                    overdue:
+                      type: boolean
