@@ -118,6 +118,10 @@ paths:
                       type: string
                     isbn:
                       type: string
+                    availableQuantity:
+                      type: integer
+                    shelfLocation:
+                      type: string
   /borrowers:
     post:
       summary: Register a borrower
