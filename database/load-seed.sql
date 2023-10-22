@@ -20,13 +20,13 @@ set @is_active = 1;
 -- table books
 -- -----------------------------------------------------
 
-INSERT INTO books (isbn, title, author, available_quantity, shelf_location, is_active)
+INSERT INTO book (isbn, title, author, available_quantity, shelf_location, is_active)
 VALUES ('9783161484100', 'The Great Gatsby', 'F. Scott Fitzgerald', 10, 'A1', @is_active);
 
-INSERT INTO books (isbn, title, author, available_quantity, shelf_location, is_active)
+INSERT INTO book (isbn, title, author, available_quantity, shelf_location, is_active)
 VALUES ('9780142437261', 'Pride and Prejudice', 'Jane Austen', 5, 'B2', @is_active);
 
-INSERT INTO books (isbn, title, author, available_quantity, shelf_location, is_active)
+INSERT INTO book (isbn, title, author, available_quantity, shelf_location, is_active)
 VALUES ('9780061120084', 'To Kill a Mockingbird', 'Harper Lee', 7, 'C3', @is_active);
 
 -- -----------------------------------------------------
@@ -46,11 +46,11 @@ VALUES ('bob.smith@example.com', 'Bob Smith', '789 Maple Ave', @register_date, @
 -- table borrowings
 -- -----------------------------------------------------
 
-INSERT INTO borrowings (email, isbn, title, author, checkout_date, due_date, is_active)
-VALUES ('john.doe@example.com', '9783161484100', 'The Great Gatsby', 'F. Scott Fitzgerald', @checkout_date, @due_date, @is_active);
+INSERT INTO borrowings (email, isbn, checkout_date, due_date, is_active)
+VALUES ('john.doe@example.com', '9783161484100', @checkout_date, @due_date, @is_active);
 
-INSERT INTO borrowings (email, isbn, title, author, checkout_date, due_date, is_active)
-VALUES ('jane.doe@example.com', '9780142437261', 'Pride and Prejudice', 'Jane Austen', @checkout_date, @due_date, @is_active);
+INSERT INTO borrowings (email, isbn, checkout_date, due_date, is_active)
+VALUES ('jane.doe@example.com', '9780142437261', @checkout_date, @due_date, @is_active);
 
-INSERT INTO borrowings (email, isbn, title, author, checkout_date, due_date, is_active)
-VALUES ('bob.smith@example.com', '9780061120084', 'To Kill a Mockingbird', 'Harper Lee', @checkout_date, @due_date, @is_active);
+INSERT INTO borrowings (email, isbn, checkout_date, due_date, is_active)
+VALUES ('bob.smith@example.com', '9780061120084', @checkout_date, @due_date, @is_active);
