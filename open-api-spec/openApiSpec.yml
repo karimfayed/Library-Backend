@@ -49,11 +49,11 @@ paths:
                       type: integer
                     shelfLocation:
                       type: string
-  '/books/{bookId}':
+  '/books/{isbn}':
     put:
       summary: Update a book
       parameters:
-        - name: bookId
+        - name: isbn
           in: path
           required: true
           schema:
@@ -83,7 +83,7 @@ paths:
     delete:
       summary: Delete a book
       parameters:
-        - name: bookId
+        - name: isbn
           in: path
           required: true
           schema:
