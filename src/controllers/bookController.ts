@@ -1,7 +1,7 @@
 import { Model } from 'sequelize';
-import { Book, addBook, getAllBooks, searchAllBooks } from '../models/book';
+import { Book, addBook, deleteBookByIsbn, getAllBooks, searchAllBooks, updateBookByIsbn } from '../models/book';
 import { BookDto } from '../dtos/book.dto';
-import { Request } from 'express';
+import { DeleteBookRequest, SearchAllBookRequest, UpdateBookRequest } from '../Requests/bookRequests';
 
 export const addBookToLibrary = async (book: BookDto): Promise<BookDto> => {
 
@@ -32,7 +32,30 @@ export const getAllBooksInLibrary = async (): Promise<BookDto[]> =>{
   return responseDto
 }
 
-export const searchAllBooksInLibrary = async (req: Request): Promise<BookDto[]> =>{
+export const updateABookInLibrary = async (req: UpdateBookRequest): Promise<BookDto> =>{
+  const {isbn} = req.params
+  const { body: book } = req
+
+  const bookUpdates = {
+    title: book.title,
+    author: book.author,
+    available_quantity: book.availableQuantity,
+    shelf_location: book.shelfLocation
+  }
+
+  await updateBookByIsbn(isbn,bookUpdates);
+  
+  return book
+}
+
+export const deleteABookInLibrary = async (req: DeleteBookRequest): Promise<void> =>{
+  const {isbn} = req.params
+
+  await deleteBookByIsbn(isbn);
+  return
+}
+
+export const searchAllBooksInLibrary = async (req:SearchAllBookRequest ): Promise<BookDto[]> =>{
   const { query: searchQuery } = req.query
   const books = await searchAllBooks(searchQuery as unknown as string);
 

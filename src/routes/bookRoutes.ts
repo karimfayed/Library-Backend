@@ -1,13 +1,13 @@
-import { NextFunction, Request, Response, Router } from 'express';
-import { BookDto } from '../dtos/book.dto';
-import { addBookToLibrary, getAllBooksInLibrary, searchAllBooksInLibrary } from '../controllers/bookController';
-import { createdResponseHandler, okResponseHandler } from '../middlewares/responseHandlers';
-import { validateAddBookRequest } from '../middlewares/validateBookRequest';
+import { NextFunction, Response, Router } from 'express';
+import { addBookToLibrary, deleteABookInLibrary, getAllBooksInLibrary, searchAllBooksInLibrary, updateABookInLibrary } from '../controllers/bookController';
+import { createdResponseHandler, noContentResponseHandler, okResponseHandler } from '../middlewares/responseHandlers';
+import { validateAddBookRequest, validateDeleteBookRequest, validateUpdateBookRequest } from '../middlewares/validateBookRequest';
+import { AddBookRequest, DeleteBookRequest, GetAllBooksRequest, SearchAllBookRequest, UpdateBookRequest } from '../Requests/bookRequests';
 
 const router = Router();
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.get('/', async (_req: Request<NonNullable<unknown>, NonNullable<unknown>, BookDto>, res:Response, next:NextFunction) => {
+router.get('/', async (_req: GetAllBooksRequest, res:Response, next:NextFunction) => {
     try {
         const responseDto = await getAllBooksInLibrary();
         okResponseHandler(responseDto, res)
@@ -18,7 +18,7 @@ router.get('/', async (_req: Request<NonNullable<unknown>, NonNullable<unknown>,
 });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.post('/', validateAddBookRequest, async (req: Request<NonNullable<unknown>, NonNullable<unknown>, BookDto>, res:Response, next:NextFunction) =>{
+router.post('/', validateAddBookRequest, async (req: AddBookRequest, res:Response, next:NextFunction) =>{
     try {
       await addBookToLibrary(req.body);
       createdResponseHandler(req,res)
@@ -28,7 +28,27 @@ router.post('/', validateAddBookRequest, async (req: Request<NonNullable<unknown
 });
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-router.get('/search', async (req: Request, res:Response, next:NextFunction) =>{
+router.put('/:isbn', validateUpdateBookRequest, async (req: UpdateBookRequest, res:Response, next:NextFunction) =>{
+  try {
+    const responseDto = await updateABookInLibrary(req);
+    okResponseHandler(responseDto, res)
+  } catch (err) {
+     return next(err)
+  }
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.delete('/:isbn', validateDeleteBookRequest, async (req: DeleteBookRequest, res:Response, next:NextFunction) =>{
+  try {
+    await deleteABookInLibrary(req);
+    noContentResponseHandler(res)
+  } catch (err) {
+     return next(err)
+  }
+});
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+router.get('/search', async (req: SearchAllBookRequest, res:Response, next:NextFunction) =>{
     try {
       const responseDto = await searchAllBooksInLibrary(req);
       okResponseHandler(responseDto, res)

@@ -109,3 +109,22 @@ export const getBookByIsbn = async (isbn: string): Promise<Book | null> => {
     });
     return book;
   };
+
+export const updateBookByIsbn = async (isbn: string, updates: Partial<BookDto>) => {
+  const updatedBook = await Book.update(updates, {
+    where: {
+      isbn,
+      is_active: 1,
+    },
+  });
+  return updatedBook;
+};
+
+export const deleteBookByIsbn = async (isbn: string) => {
+  const deletedBook = await Book.update({is_active:0}, {
+    where: {
+      isbn,
+    },
+  });
+  return deletedBook;
+};

@@ -1,17 +1,15 @@
-import { Request, Response } from "express";
-import { BookDto } from "../dtos/book.dto";
+import { Response } from "express";
 import { HttpStatusCode } from "../constants/HttpStatusCode";
 
-export const createdResponseHandler = (req: Request, res:Response) =>{
+export const createdResponseHandler = <T>(data: T, res:Response) =>{
     res.status( HttpStatusCode.Created)
-    .send(req.body)
+    .send(data)
 }
 
-export const okResponseHandler = (bookDto: BookDto[], res:Response) =>{
-    res.status( HttpStatusCode.OK)
-    .send(bookDto)
-}
+export const okResponseHandler = <T>(data: T, res: Response): void => {
+    res.status(HttpStatusCode.OK).send(data);
+  };
 
 export const noContentResponseHandler = (res:Response) =>{
-    res.status(HttpStatusCode.NoContent)
+    res.status(HttpStatusCode.NoContent).send()
 }

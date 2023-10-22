@@ -5,4 +5,3 @@ export interface BookDto {
     availableQuantity: number;
     shelfLocation: string;
 }
-

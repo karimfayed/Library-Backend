@@ -23,7 +23,7 @@ const validateRequiredFields = (book: BookDto) =>{
 
 const validateIsbn = async (book: BookDto):Promise<void | never> =>{
   validateIsbnSize(book.isbn)
-  await validateIsbnExist(book.isbn)
+  await validateIsbnValid(book.isbn)
 }
 
 const areRequiredFieldsPresent = (book: BookDto) =>{
@@ -37,7 +37,7 @@ const validateIsbnSize = (isbn:string) =>{
     throw new BadRequestError(BooksErrorMessages.InvalidISBN)
 }
 
-const validateIsbnExist = async (isbn:string):Promise<void | never> =>{
+const validateIsbnValid = async (isbn:string):Promise<void | never> =>{
   const isBookExist =  await getBookByIsbn(isbn)
 
   if(isBookExist)
@@ -46,4 +46,32 @@ const validateIsbnExist = async (isbn:string):Promise<void | never> =>{
 
 const isIsbnSizeValid = (isbn:string) =>{
   return isbn.length === 13
+}
+
+export const validateUpdateBookRequest = (req: Request<NonNullable<unknown>, NonNullable<unknown>, BookDto>, _res: Response, next: NextFunction) => {
+  const { body: book } = req
+  try {
+    validateRequiredFields(book)
+    validateIsbnSize(book.isbn)
+  } catch (error) {
+    return next(error);
+  }
+  return next();
+};
+
+export const validateDeleteBookRequest = async (req: Request<NonNullable<unknown>, NonNullable<unknown>, BookDto>, _res: Response, next: NextFunction) => {
+  const { body: book } = req
+  try {
+    await validateIsbnExist(book.isbn)
+  } catch (error) {
+    return next(error);
+  }
+  return next();
+};
+
+const validateIsbnExist = async (isbn:string):Promise<void | never> =>{
+  const isBookExist =  await getBookByIsbn(isbn)
+
+  if(!isBookExist)
+    throw new BadRequestError(BooksErrorMessages.ISBNNotFound)
 }
